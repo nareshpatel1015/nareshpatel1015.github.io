@@ -1,0 +1,891 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>naresh@portfolio:~$</title>
+    <meta name="description" content="Naresh Patel - Founder & AI Engineer. Built Rawstore, HubbyAi, Wingardium, Blaze.">
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        :root {
+            --bg: #0a0a0a;
+            --text: #00ff88;
+            --text-dim: #00aa55;
+            --text-gray: #888888;
+            --cursor: #00ff88;
+            --link: #00ddff;
+            --error: #ff4444;
+            --warning: #ffaa00;
+        }
+        
+        body {
+            background: var(--bg);
+            color: var(--text);
+            font-family: 'Courier New', 'Monaco', 'Consolas', monospace;
+            font-size: 16px;
+            line-height: 1.6;
+            height: 100vh;
+            overflow: hidden;
+        }
+        
+        #terminal {
+            height: 100vh;
+            overflow-y: auto;
+            padding: 2rem;
+            padding-bottom: 100px;
+        }
+        
+        .output-line {
+            margin-bottom: 0.3rem;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+        }
+        
+        .prompt-line {
+            display: flex;
+            align-items: center;
+            margin-bottom: 0.5rem;
+        }
+        
+        .prompt-text {
+            color: var(--text-dim);
+            margin-right: 0.5rem;
+            flex-shrink: 0;
+        }
+        
+        .prompt-text::before {
+            content: 'naresh@portfolio:~$ ';
+        }
+        
+        .command-text {
+            color: var(--text);
+        }
+        
+        .welcome-text {
+            font-size: 1.1em;
+            line-height: 1.8;
+            margin-bottom: 1.5rem;
+        }
+        
+        .portfolio-header {
+            font-size: 1.4em;
+            margin: 1rem 0 0.3rem 0;
+            color: var(--text);
+        }
+        
+        .login-info {
+            color: var(--text-dim);
+            font-size: 0.95em;
+        }
+        
+        .separator {
+            color: var(--text-dim);
+            margin: 0.5rem 0 1rem 0;
+        }
+        
+        .input-line {
+            display: flex;
+            align-items: center;
+            position: sticky;
+            bottom: 0;
+            background: var(--bg);
+            padding: 1rem 0;
+            border-top: 1px solid rgba(0, 255, 136, 0.1);
+        }
+        
+        .input-prompt {
+            color: var(--text-dim);
+            margin-right: 0.5rem;
+            flex-shrink: 0;
+        }
+        
+        .input-prompt::before {
+            content: 'naresh@portfolio:~$ ';
+        }
+        
+        #command-input {
+            background: transparent;
+            border: none;
+            color: var(--text);
+            font-family: inherit;
+            font-size: inherit;
+            outline: none;
+            flex: 1;
+            caret-color: var(--cursor);
+        }
+        
+        .link {
+            color: var(--link);
+            text-decoration: none;
+            border-bottom: 1px dotted var(--link);
+        }
+        
+        .link:hover {
+            opacity: 0.7;
+        }
+        
+        .error {
+            color: var(--error);
+        }
+        
+        .warning {
+            color: var(--warning);
+        }
+        
+        .dim {
+            color: var(--text-dim);
+        }
+        
+        .gray {
+            color: var(--text-gray);
+        }
+        
+        .section-header {
+            color: var(--text);
+            font-weight: bold;
+            margin: 1rem 0 0.5rem 0;
+        }
+        
+        .indent {
+            margin-left: 2rem;
+        }
+        
+        .box {
+            border: 1px solid var(--text-dim);
+            padding: 1rem;
+            margin: 1rem 0;
+        }
+        
+        /* Scrollbar */
+        #terminal::-webkit-scrollbar {
+            width: 8px;
+        }
+        
+        #terminal::-webkit-scrollbar-track {
+            background: var(--bg);
+        }
+        
+        #terminal::-webkit-scrollbar-thumb {
+            background: var(--text-dim);
+            border-radius: 4px;
+        }
+        
+        /* Mobile */
+        @media (max-width: 768px) {
+            body {
+                font-size: 14px;
+            }
+            
+            #terminal {
+                padding: 1rem;
+            }
+            
+            .indent {
+                margin-left: 1rem;
+            }
+        }
+        
+        /* Loading animation */
+        @keyframes blink {
+            0%, 49% { opacity: 1; }
+            50%, 100% { opacity: 0; }
+        }
+        
+        .cursor-blink {
+            animation: blink 1s infinite;
+            color: var(--cursor);
+            margin-left: 2px;
+        }
+        
+        #cursor-indicator {
+            pointer-events: none;
+            display: inline;
+        }
+    </style>
+</head>
+<body>
+    <div id="terminal"></div>
+    <div class="input-line">
+        <span class="input-prompt"></span>
+        <input type="text" id="command-input" autofocus autocomplete="off" spellcheck="false">
+        <span id="cursor-indicator" class="cursor-blink">█</span>
+    </div>
+    
+    <script>
+        const terminal = document.getElementById('terminal');
+        const input = document.getElementById('command-input');
+        const cursorIndicator = document.getElementById('cursor-indicator');
+        
+        let commandHistory = [];
+        let historyIndex = -1;
+        
+        // Command database
+        const commands = {
+            help: {
+                description: 'Show available commands',
+                execute: () => {
+                    return `
+<span class="section-header">NARESH PATEL - Interactive Portfolio</span>
+
+Welcome! I'm a founder & AI engineer who ships production code.
+Type commands below to explore my work.
+
+<span class="dim">QUICK START:</span>
+  <span class="warning">projects</span>      → My 4 founded companies  
+  <span class="warning">production</span>    → Live AI work on Calae.in & Zepto
+  <span class="warning">skills</span>        → Complete tech stack
+  
+<span class="dim">PROJECTS:</span>
+  <span class="warning">blaze</span>         → Open source dev automation (GitHub)
+  <span class="warning">wingardium</span>    → B2B AI image generation (LIVE)
+  <span class="warning">hubbyai</span>       → RAG-based relationship assistant
+  <span class="warning">rawstore</span>      → First startup (2018-2019)
+  
+<span class="dim">PROFESSIONAL:</span>
+  <span class="warning">experience</span>    → Career timeline (THB, Kindlife, Twango)
+  
+<span class="dim">CONTACT:</span>
+  <span class="warning">contact</span>       → Email, LinkedIn, GitHub
+  <span class="warning">hire</span>          → Why work with me
+  
+<span class="dim">UTILITIES:</span>
+  <span class="warning">clear</span>         → Clear terminal screen
+  <span class="warning">exit</span>          → Return to welcome screen
+  <span class="warning">about</span>         → Quick intro
+  
+Type any command above (e.g., "projects" or "blaze")`;
+                }
+            },
+            
+            about: {
+                description: 'Quick introduction',
+                execute: () => {
+                    return `
+<span class="section-header">$ whoami</span>
+
+Naresh Patel
+Founder & AI Engineer | Bengaluru, India
+
+I build AI-powered products that ship to production.
+
+• Founded <span class="warning">4 projects</span> (Rawstore → HubbyAi → Wingardium → Blaze)
+• Architected systems serving <span class="warning">20K+ daily users</span>
+• Shipped <span class="warning">AI-generated images live</span> on e-commerce sites
+• <span class="warning">5+ years</span> backend engineering at scale
+
+<span class="dim">Try: "production" to see live work, "projects" to explore what I built</span>`;
+                }
+            },
+            
+            projects: {
+                description: 'List all founded projects',
+                execute: () => {
+                    return `
+<span class="section-header">$ ls -la ~/projects/</span>
+
+total 4 projects
+
+drwxr-xr-x  naresh  founders  <span class="warning">2025</span>  blaze/         <span class="dim">→ AI dev automation (open source)</span>
+drwxr-xr-x  naresh  founders  <span class="warning">2024</span>  wingardium/    <span class="dim">→ AI image gen (PRODUCTION)</span>
+drwxr-xr-x  naresh  founders  <span class="warning">2023</span>  hubbyai/       <span class="dim">→ RAG-based assistant</span>
+drwxr-xr-x  naresh  founders  <span class="warning">2018</span>  rawstore/      <span class="dim">→ First startup</span>
+
+<span class="dim">Type command name to explore (e.g., "blaze", "wingardium")</span>`;
+                }
+            },
+            
+            production: {
+                description: 'View live production work',
+                execute: () => {
+                    return `
+<span class="section-header">$ cat ~/proof-of-work.txt</span>
+
+<span class="warning">WINGARDIUM AI - LIVE IN PRODUCTION</span>
+
+Our AI-generated fashion images are actively running on real 
+e-commerce sites RIGHT NOW, driving actual sales.
+
+<span class="dim">━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━</span>
+
+<span class="section-header">PRODUCTION DEPLOYMENTS:</span>
+
+📍 <span class="warning">Calae.in</span> (Plus-size Fashion E-commerce)
+   AI-generated product photography for fashion catalog
+   <a href="https://www.calae.in/products/plus-size-salmon-pink-drop-shoulder-solid-t-shirt-by-calae-sizes-available-l-to-5xl" class="link" target="_blank">→ View Live Example 1</a>
+   <a href="https://www.calae.in/products/plus-size-lilac-drop-shoulder-t-shirt-solid-knit-top-by-calae-sizes-available-l-to-5xl" class="link" target="_blank">→ View Live Example 2</a>
+
+📍 <span class="warning">Zepto</span> (Quick Commerce Platform)
+   AI-generated fashion imagery for product listings
+   <a href="https://www.zepto.com/pn/outlaws-mens-poly-cotton-fabric-made-chines-collar-half-sleeves-t-shirt-black-s/pvid/56416c4d-98b3-42d7-bbb0-495f496d6559" class="link" target="_blank">→ View Live</a>
+
+<span class="dim">━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━</span>
+
+<span class="section-header">THE DIFFERENCE:</span>
+
+Most AI portfolios: "I built a demo"
+Mine: "My AI work is making money for real businesses"
+
+<span class="dim">Type "wingardium" for full technical details</span>`;
+                }
+            },
+            
+            blaze: {
+                description: 'View Blaze project',
+                execute: () => {
+                    return `
+<span class="section-header">$ cd blaze && cat README.md</span>
+
+⚡ <span class="warning">BLAZE</span> - AI-Powered Development Automation
+   Open Source | 2025
+
+<span class="dim">━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━</span>
+
+<span class="section-header">THE PITCH:</span>
+
+Type /agent PROJ-123 in Slack → AI writes a plan → you approve → 
+it writes the code → creates a PR. 
+
+Complete automation from ticket to pull request.
+
+<span class="section-header">WHY I BUILT THIS:</span>
+
+Tired of the grind: read ticket → write code → create PR → repeat.
+Thought: "Can AI do this entire loop?" 
+
+Turns out: Yes, with human oversight.
+
+<span class="section-header">HOW IT WORKS:</span>
+
+  1. Slash command in Slack: /agent PROJ-123
+  2. Fetches ticket from JIRA/ClickUp/Asana
+  3. <span class="warning">Claude generates implementation plan</span>
+  4. <span class="warning">Human approves or requests changes</span>
+  5. AI writes the actual code
+  6. Creates PR with approved plan as comment
+
+Two-phase execution = quality control built in.
+
+<span class="section-header">TECHNICAL HIGHLIGHTS:</span>
+
+  • Semantic memory with pgvector for context-aware code
+  • Multi-tenant architecture with RBAC
+  • Encrypted credential storage (AES-256-GCM)
+  • Pluggable adapters for any ticket/git/LLM provider
+  • Docker sandbox for isolated execution
+  • <span class="warning">87 tests across 5 test suites</span>
+
+<span class="section-header">STACK:</span>
+
+  TypeScript | Node.js | BullMQ | PostgreSQL | Redis | Docker
+  Claude API | pgvector | RAG
+
+<span class="dim">━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━</span>
+
+GitHub: <a href="https://github.com/nareshpatel1015/blaze" class="link" target="_blank">github.com/nareshpatel1015/blaze</a>
+
+<span class="dim">It's open source. Fork it, use it, break it, fix it.</span>`;
+                }
+            },
+            
+            wingardium: {
+                description: 'View Wingardium project',
+                execute: () => {
+                    return `
+<span class="section-header">$ cd wingardium && cat story.txt</span>
+
+🎨 <span class="warning">WINGARDIUM</span> - AI Image Generation for E-commerce
+   B2B | 2024 | LIVE IN PRODUCTION
+
+<span class="dim">━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━</span>
+
+<span class="section-header">THE QUESTION WE ASKED:</span>
+
+"Can AI generate fashion photography good enough for real 
+e-commerce sites?"
+
+Answer: Yes. And it's running in production right now.
+
+<span class="section-header">WHAT WE BUILT:</span>
+
+B2B platform generating production-ready fashion imagery.
+Not demos. Not mockups. Actual images driving sales on:
+  • Calae.in (plus-size fashion)
+  • Zepto (quick commerce)
+
+<span class="section-header">THE TECHNICAL CHALLENGE:</span>
+
+E-commerce needs consistency. Same lighting, same angles, 
+same quality across hundreds of products.
+
+We fine-tuned Flux models specifically for fashion photography,
+then built ComfyUI workflows that guarantee consistent outputs.
+
+<span class="section-header">DELIVERABLES:</span>
+
+  ✓ Fine-tuned Flux models for fashion aesthetics
+  ✓ Automated ComfyUI generation workflows
+  ✓ Production deployment on real e-commerce sites
+  ✓ Paying B2B clients
+  ✓ Images actively driving sales
+
+<span class="section-header">STACK:</span>
+
+  Flux | ComfyUI | PyTorch | Python | Model Fine-tuning
+
+<span class="dim">━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━</span>
+
+<span class="section-header">PROOF:</span>
+
+  Calae.in: <a href="https://www.calae.in/products/plus-size-salmon-pink-drop-shoulder-solid-t-shirt-by-calae-sizes-available-l-to-5xl" class="link" target="_blank">Live Example 1</a>
+  Calae.in: <a href="https://www.calae.in/products/plus-size-lilac-drop-shoulder-t-shirt-solid-knit-top-by-calae-sizes-available-l-to-5xl" class="link" target="_blank">Live Example 2</a>
+  Zepto:    <a href="https://www.zepto.com/pn/outlaws-mens-poly-cotton-fabric-made-chines-collar-half-sleeves-t-shirt-black-s/pvid/56416c4d-98b3-42d7-bbb0-495f496d6559" class="link" target="_blank">Live Example</a>
+
+<span class="dim">That's the difference between "I built something" and 
+"I shipped something that makes money."</span>`;
+                }
+            },
+            
+            hubbyai: {
+                description: 'View HubbyAi project',
+                execute: () => {
+                    return `
+<span class="section-header">$ cd hubbyai && cat overview.txt</span>
+
+💬 <span class="warning">HUBBYAI</span> - AI Relationship Assistant
+   B2C | 2023
+
+<span class="dim">━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━</span>
+
+<span class="section-header">THE IDEA:</span>
+
+Conversational AI that helps with relationship questions.
+Built with RAG architecture for context-aware responses.
+
+<span class="section-header">WHY RAG?</span>
+
+Generic LLM responses aren't helpful for personal questions.
+You need memory. You need context. You need personalization.
+
+RAG + vector database = AI that remembers your conversation
+history and gives contextually relevant advice.
+
+<span class="section-header">TECHNICAL IMPLEMENTATION:</span>
+
+  • RAG architecture for contextual conversations
+  • Pinecone vector DB for semantic search & memory
+  • LangChain for AI workflow orchestration  
+  • Conversation history embedded and retrieved
+  • Personalized responses based on past interactions
+
+<span class="section-header">WHAT I LEARNED:</span>
+
+Building AI products for personal use cases is hard.
+Generic responses don't work. You need real personalization.
+That's why RAG + vector search is essential for any 
+conversational AI that needs to "know" the user.
+
+<span class="section-header">STACK:</span>
+
+  Node.js | TypeScript | LangChain | Pinecone | RAG
+  Vector Embeddings | OpenAI API
+
+<span class="dim">━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━</span>
+
+<span class="dim">This was my first serious dive into RAG architecture.
+The lessons here directly influenced how I built Blaze's 
+semantic memory system.</span>`;
+                }
+            },
+            
+            rawstore: {
+                description: 'View Rawstore project',
+                execute: () => {
+                    return `
+<span class="section-header">$ cd rawstore && cat history.log</span>
+
+🛍️ <span class="warning">RAWSTORE</span> - E-commerce Platform
+   First Venture | July 2018 - September 2019
+
+<span class="dim">━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━</span>
+
+<span class="section-header">THE BEGINNING:</span>
+
+Fresh out of college. No job offers. Thought: "Why not 
+start something?"
+
+Built a doorshipping platform for laptop peripherals.
+Dropshipping but faster - direct from suppliers.
+
+<span class="section-header">WHAT I LEARNED:</span>
+
+  ✓ How to ship fast (built MVP in 3 weeks)
+  ✓ Customer acquisition is harder than code
+  ✓ Product-market fit > perfect tech stack
+  ✓ Operations matter as much as engineering
+  ✓ Knowing when to pivot vs when to persist
+
+<span class="section-header">THE REALITY:</span>
+
+Ran it for 14 months. Revenue wasn't scaling fast enough.
+Margins were thin. Logistics were painful.
+
+Shut it down. Got a job. Kept building.
+
+<span class="section-header">WHY IT MATTERED:</span>
+
+This taught me more than any job could:
+  • Building != Shipping
+  • Code != Business
+  • Features != Value
+
+Every startup since has been better because of Rawstore.
+
+<span class="section-header">STACK:</span>
+
+  PHP | MySQL | E-commerce | Logistics | Payment Gateways
+
+<span class="dim">━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━</span>
+
+<span class="dim">First venture. Failed fast. Learned faster.
+That's the founder's journey.</span>`;
+                }
+            },
+            
+            experience: {
+                description: 'View professional timeline',
+                execute: () => {
+                    return `
+<span class="section-header">$ cat ~/experience.log</span>
+
+<span class="warning">PROFESSIONAL EXPERIENCE</span>
+
+<span class="dim">━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━</span>
+
+<span class="section-header">[2022 - Present] Senior Backend Engineer</span>
+<span class="dim">THB (Technology Healthcare Big Data Analytics), New Delhi</span>
+
+Healthcare management platform serving India's leading hospital chains.
+
+Key Work:
+  • Architected slot management & appointment booking system
+    → Handles <span class="warning">20,000+ daily appointments</span>
+  • Built integrations with multiple hospital vendors
+    → AWS Lambda, API gateways, queue-based processing
+  • Implemented concurrent booking with database-level consistency
+    → No double-bookings under high traffic
+  • Designed flexible slot management system
+    → <span class="warning">100% automation</span> of hospital scheduling operations
+
+Tech: NestJS, TypeScript, PostgreSQL, AWS Lambda, REST APIs
+
+<span class="dim">━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━</span>
+
+<span class="section-header">[2021 - 2022] Software Engineer</span>
+<span class="dim">Kindlife, Gurgaon</span>
+
+Built automation systems for e-commerce operations.
+
+Key Work:
+  • Designed automated order shipment system
+    → Improved processing from <span class="warning">3 days to minutes</span>
+  • Scaled order processing  
+    → From 150/day to <span class="warning">real-time processing</span>
+  • Redesigned payment flow architecture
+    → <span class="warning">+20% completion rate</span>
+  • Built reward point system
+    → <span class="warning">+40% user engagement</span>
+
+Tech: PHP, MySQL, AWS SQS, Payment Gateways
+
+<span class="dim">━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━</span>
+
+<span class="section-header">[2019 - 2021] Backend Developer</span>
+<span class="dim">Twango Social Network, New Delhi</span>
+
+Led technology migration and built internal tools.
+
+Key Work:
+  • Migrated entire codebase: <span class="warning">PHP → Node.js</span>
+  • Built internal automation for lead distribution
+  • Developed customer support operation tools
+
+Tech: Node.js, PHP, MySQL, Internal Tools
+
+<span class="dim">━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━</span>
+
+<span class="dim">5+ years building systems that scale.</span>`;
+                }
+            },
+            
+            skills: {
+                description: 'View complete tech stack',
+                execute: () => {
+                    return `
+<span class="section-header">$ echo $SKILLS | jq '.'</span>
+
+{
+  <span class="section-header">"ai_ml":</span> [
+    "PyTorch", "FastAI", "LangChain", "RAG", "Pinecone",
+    "Fine-tuning", "ComfyUI", "Flux", "Vector Databases",
+    "Transformers", "Model Evaluation"
+  ],
+  
+  <span class="section-header">"backend":</span> [
+    "Node.js", "NestJS", "TypeScript", "Python", "Express",
+    "PHP", "Laravel", "Java", "RESTful APIs"
+  ],
+  
+  <span class="section-header">"databases":</span> [
+    "PostgreSQL", "MySQL", "MongoDB", "Redis", "DynamoDB",
+    "pgvector", "Database Design", "Query Optimization"
+  ],
+  
+  <span class="section-header">"cloud_devops":</span> [
+    "AWS Lambda", "ECS", "S3", "SQS", "CloudWatch",
+    "Docker", "CI/CD", "Jenkins", "Git"
+  ],
+  
+  <span class="section-header">"architecture":</span> [
+    "Microservices", "Event-Driven", "Queue Systems",
+    "Real-time Processing", "System Integration", "RBAC"
+  ],
+  
+  <span class="section-header">"ai_dev_tools":</span> [
+    "Cursor", "Claude Code", "GitHub Copilot",
+    "AI-assisted development workflows"
+  ]
+}
+
+<span class="dim">━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━</span>
+
+<span class="section-header">AI-DRIVEN DEVELOPMENT:</span>
+
+I use AI tools (Cursor, Claude, Copilot) to reduce routine 
+coding by ~70% while maintaining code quality.
+
+Building WITH AI is different from building AI.
+I do both.`;
+                }
+            },
+            
+            contact: {
+                description: 'Get contact information',
+                execute: () => {
+                    return `
+<span class="section-header">$ ./contact.sh</span>
+
+<span class="warning">CONTACT INFORMATION</span>
+
+Email:    <a href="mailto:nareshpatel635@gmail.com" class="link">nareshpatel635@gmail.com</a>
+LinkedIn: <a href="https://www.linkedin.com/in/naresh-patel-2019/" class="link" target="_blank">linkedin.com/in/naresh-patel-2019</a>
+GitHub:   <a href="https://github.com/nareshpatel1015" class="link" target="_blank">github.com/nareshpatel1015</a>
+
+Location: Bengaluru, Karnataka, India
+Timezone: IST (UTC+5:30)
+
+<span class="dim">━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━</span>
+
+<span class="section-header">OPEN TO:</span>
+
+  • Co-founder opportunities (AI/SaaS startups)
+  • Senior engineering roles (backend/AI focus)
+  • Technical advisory for early-stage startups
+  • Contract work on AI/automation projects
+
+<span class="dim">Type "hire" to see why you should work with me</span>`;
+                }
+            },
+            
+            hire: {
+                description: 'Why work with me',
+                execute: () => {
+                    return `
+<span class="section-header">$ cat why-work-with-me.txt</span>
+
+<span class="warning">WHY WORK WITH ME</span>
+
+<span class="dim">━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━</span>
+
+<span class="section-header">I SHIP PRODUCTION CODE</span>
+
+Not demos. Not prototypes. Production systems that handle
+real traffic, real money, real users.
+
+  • 20K+ daily appointments (THB healthcare platform)
+  • AI images live on Calae.in & Zepto (Wingardium)
+  • Open source dev automation (Blaze on GitHub)
+
+<span class="section-header">I UNDERSTAND BOTH SIDES</span>
+
+<span class="warning">As a founder:</span>
+  → I know what matters: speed, product-market fit, runway
+  → I've failed. I've learned. I've iterated.
+  → I ship fast but build for scale
+
+<span class="warning">As an engineer:</span>
+  → I architect systems that don't break at 3am
+  → I write tests. I document. I plan for maintenance.
+  → I balance "move fast" with "build it right"
+
+<span class="section-header">I BUILD WITH AI, NOT JUST AI</span>
+
+  • Use AI tools daily (Cursor, Claude, Copilot)
+  • Built AI products (Wingardium, HubbyAi, Blaze)
+  • Understand both sides of the AI stack
+
+<span class="section-header">I DON'T NEED HAND-HOLDING</span>
+
+Give me a problem. I'll:
+  1. Understand the business context
+  2. Design the technical solution
+  3. Ship it to production
+  4. Monitor, iterate, improve
+
+Self-directed. Low-drama. High-output.
+
+<span class="dim">━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━</span>
+
+<span class="section-header">BOTTOM LINE:</span>
+
+You need someone who can build fast, ship reliably, and 
+understand the business side?
+
+Let's talk: <a href="mailto:nareshpatel635@gmail.com" class="link">nareshpatel635@gmail.com</a>`;
+                }
+            },
+            
+            clear: {
+                description: 'Clear terminal screen',
+                execute: () => {
+                    terminal.innerHTML = '';
+                    return '';
+                }
+            },
+            
+            exit: {
+                description: 'Return to welcome screen',
+                execute: () => {
+                    terminal.innerHTML = '';
+                    init();
+                    return '';
+                }
+            }
+        };
+        
+        // Initialize with welcome message
+        function init() {
+            const welcomeMsg = `
+<span class="login-info">Last login: Sat Apr 11 2026</span>
+
+<div class="portfolio-header">Naresh Patel - Founder & AI Engineer</div>
+<span class="separator">━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━</span>
+
+<div class="welcome-text">Type '<span class="warning">help</span>' to see available commands.
+Type '<span class="warning">production</span>' to see my live AI work.
+Type '<span class="warning">projects</span>' to explore what I've built.
+Type '<span class="warning">skills</span>' to check my tech stack.</div>
+
+<span class="dim">Tip: Use ↑/↓ arrows for command history</span>
+`;
+            addOutput(welcomeMsg);
+            input.focus();
+        }
+        
+        // Add output to terminal
+        function addOutput(html) {
+            const div = document.createElement('div');
+            div.className = 'output-line';
+            div.innerHTML = html;
+            terminal.appendChild(div);
+            terminal.scrollTop = terminal.scrollHeight;
+        }
+        
+        // Add command line to history display
+        function addCommandLine(cmd) {
+            const div = document.createElement('div');
+            div.className = 'prompt-line';
+            div.innerHTML = `<span class="prompt-text"></span><span class="command-text">${cmd}</span>`;
+            terminal.appendChild(div);
+        }
+        
+        // Process command
+        function processCommand(cmd) {
+            const trimmed = cmd.trim().toLowerCase();
+            
+            if (!trimmed) return;
+            
+            // Add to history
+            addCommandLine(cmd);
+            commandHistory.unshift(trimmed);
+            historyIndex = -1;
+            
+            // Execute command
+            if (commands[trimmed]) {
+                const output = commands[trimmed].execute();
+                if (output) {
+                    addOutput(output);
+                }
+            } else {
+                addOutput(`<span class="error">Command not found: ${cmd}</span>\n\nType '<span class="warning">help</span>' to see available commands.`);
+            }
+            
+            // Scroll to bottom
+            terminal.scrollTop = terminal.scrollHeight;
+        }
+        
+        // Handle input
+        input.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') {
+                const cmd = input.value;
+                processCommand(cmd);
+                input.value = '';
+                cursorIndicator.style.display = 'inline';
+            } else if (e.key === 'ArrowUp') {
+                e.preventDefault();
+                if (historyIndex < commandHistory.length - 1) {
+                    historyIndex++;
+                    input.value = commandHistory[historyIndex];
+                }
+            } else if (e.key === 'ArrowDown') {
+                e.preventDefault();
+                if (historyIndex > 0) {
+                    historyIndex--;
+                    input.value = commandHistory[historyIndex];
+                } else {
+                    historyIndex = -1;
+                    input.value = '';
+                }
+            } else if (e.key === 'Tab') {
+                e.preventDefault();
+                const partial = input.value.toLowerCase();
+                const matches = Object.keys(commands).filter(cmd => cmd.startsWith(partial));
+                if (matches.length === 1) {
+                    input.value = matches[0];
+                }
+            } else if (e.key === 'l' && e.ctrlKey) {
+                e.preventDefault();
+                commands.clear.execute();
+            }
+        });
+        
+        // Toggle cursor visibility based on input content
+        input.addEventListener('input', () => {
+            cursorIndicator.style.display = input.value.length > 0 ? 'none' : 'inline';
+        });
+        
+        // Keep focus on input
+        document.addEventListener('click', () => {
+            input.focus();
+        });
+        
+        // Initialize on load
+        init();
+    </script>
+</body>
+</html>
