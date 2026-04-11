@@ -30,21 +30,37 @@
             font-family: 'Courier New', 'Monaco', 'Consolas', monospace;
             font-size: 16px;
             line-height: 1.6;
-            height: 100vh;
             overflow: hidden;
         }
-        
-        #terminal {
+
+        #terminal-container {
+            display: flex;
+            flex-direction: column;
             height: 100vh;
+            height: 100dvh;
+        }
+
+        #terminal {
+            flex: 1;
             overflow-y: auto;
+            overflow-x: hidden;
             padding: 2rem;
-            padding-bottom: 100px;
+            padding-bottom: 20px;
         }
         
         .output-line {
             margin-bottom: 0.3rem;
             white-space: pre-wrap;
             word-wrap: break-word;
+            overflow-wrap: break-word;
+            max-width: 100%;
+        }
+
+        .hr-separator {
+            display: block;
+            border-top: 1px solid var(--text-dim);
+            margin: 0.75rem 0;
+            width: 100%;
         }
         
         .prompt-line {
@@ -92,10 +108,9 @@
         .input-line {
             display: flex;
             align-items: center;
-            position: sticky;
-            bottom: 0;
+            flex-shrink: 0;
             background: var(--bg);
-            padding: 1rem 0;
+            padding: 1rem 2rem;
             border-top: 1px solid rgba(0, 255, 136, 0.1);
         }
         
@@ -181,13 +196,60 @@
             body {
                 font-size: 14px;
             }
-            
+
             #terminal {
                 padding: 1rem;
+                padding-bottom: 10px;
             }
-            
+
+            .input-line {
+                padding: 0.75rem 1rem;
+            }
+
             .indent {
                 margin-left: 1rem;
+            }
+
+            .portfolio-header {
+                font-size: 1.1em;
+            }
+
+            .welcome-text {
+                font-size: 1em;
+                line-height: 1.6;
+            }
+
+            .box {
+                padding: 0.75rem;
+                margin: 0.75rem 0;
+            }
+
+            .section-header {
+                margin: 0.75rem 0 0.3rem 0;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .prompt-text::before {
+                content: '~$ ';
+            }
+
+            .input-prompt::before {
+                content: '~$ ';
+            }
+        }
+
+        @media (max-width: 380px) {
+            body {
+                font-size: 12px;
+            }
+
+            #terminal {
+                padding: 0.75rem;
+            }
+
+            .input-line {
+                padding: 0.75rem;
             }
         }
         
@@ -210,11 +272,13 @@
     </style>
 </head>
 <body>
-    <div id="terminal"></div>
-    <div class="input-line">
-        <span class="input-prompt"></span>
-        <input type="text" id="command-input" autofocus autocomplete="off" spellcheck="false">
-        <span id="cursor-indicator" class="cursor-blink">█</span>
+    <div id="terminal-container">
+        <div id="terminal"></div>
+        <div class="input-line">
+            <span class="input-prompt"></span>
+            <input type="text" id="command-input" autocomplete="off" spellcheck="false">
+            <span id="cursor-indicator" class="cursor-blink">█</span>
+        </div>
     </div>
     
     <script>
@@ -311,7 +375,7 @@ drwxr-xr-x  naresh  founders  <span class="warning">2018</span>  rawstore/      
 Our AI-generated fashion images are actively running on real 
 e-commerce sites RIGHT NOW, driving actual sales.
 
-<span class="dim">━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━</span>
+<span class="hr-separator"></span>
 
 <span class="section-header">PRODUCTION DEPLOYMENTS:</span>
 
@@ -324,7 +388,7 @@ e-commerce sites RIGHT NOW, driving actual sales.
    AI-generated fashion imagery for product listings
    <a href="https://www.zepto.com/pn/outlaws-mens-poly-cotton-fabric-made-chines-collar-half-sleeves-t-shirt-black-s/pvid/56416c4d-98b3-42d7-bbb0-495f496d6559" class="link" target="_blank">→ View Live</a>
 
-<span class="dim">━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━</span>
+<span class="hr-separator"></span>
 
 <span class="section-header">THE DIFFERENCE:</span>
 
@@ -344,7 +408,7 @@ Mine: "My AI work is making money for real businesses"
 ⚡ <span class="warning">BLAZE</span> - AI-Powered Development Automation
    Open Source | 2025
 
-<span class="dim">━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━</span>
+<span class="hr-separator"></span>
 
 <span class="section-header">THE PITCH:</span>
 
@@ -385,7 +449,7 @@ Two-phase execution = quality control built in.
   TypeScript | Node.js | BullMQ | PostgreSQL | Redis | Docker
   Claude API | pgvector | RAG
 
-<span class="dim">━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━</span>
+<span class="hr-separator"></span>
 
 GitHub: <a href="https://github.com/nareshpatel1015/blaze" class="link" target="_blank">github.com/nareshpatel1015/blaze</a>
 
@@ -402,7 +466,7 @@ GitHub: <a href="https://github.com/nareshpatel1015/blaze" class="link" target="
 🎨 <span class="warning">WINGARDIUM</span> - AI Image Generation for E-commerce
    B2B | 2024 | LIVE IN PRODUCTION
 
-<span class="dim">━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━</span>
+<span class="hr-separator"></span>
 
 <span class="section-header">THE QUESTION WE ASKED:</span>
 
@@ -438,7 +502,7 @@ then built ComfyUI workflows that guarantee consistent outputs.
 
   Flux | ComfyUI | PyTorch | Python | Model Fine-tuning
 
-<span class="dim">━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━</span>
+<span class="hr-separator"></span>
 
 <span class="section-header">PROOF:</span>
 
@@ -460,7 +524,7 @@ then built ComfyUI workflows that guarantee consistent outputs.
 💬 <span class="warning">HUBBYAI</span> - AI Relationship Assistant
    B2C | 2023
 
-<span class="dim">━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━</span>
+<span class="hr-separator"></span>
 
 <span class="section-header">THE IDEA:</span>
 
@@ -495,7 +559,7 @@ conversational AI that needs to "know" the user.
   Node.js | TypeScript | LangChain | Pinecone | RAG
   Vector Embeddings | OpenAI API
 
-<span class="dim">━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━</span>
+<span class="hr-separator"></span>
 
 <span class="dim">This was my first serious dive into RAG architecture.
 The lessons here directly influenced how I built Blaze's 
@@ -512,7 +576,7 @@ semantic memory system.</span>`;
 🛍️ <span class="warning">RAWSTORE</span> - E-commerce Platform
    First Venture | July 2018 - September 2019
 
-<span class="dim">━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━</span>
+<span class="hr-separator"></span>
 
 <span class="section-header">THE BEGINNING:</span>
 
@@ -550,7 +614,7 @@ Every startup since has been better because of Rawstore.
 
   PHP | MySQL | E-commerce | Logistics | Payment Gateways
 
-<span class="dim">━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━</span>
+<span class="hr-separator"></span>
 
 <span class="dim">First venture. Failed fast. Learned faster.
 That's the founder's journey.</span>`;
@@ -565,7 +629,7 @@ That's the founder's journey.</span>`;
 
 <span class="warning">PROFESSIONAL EXPERIENCE</span>
 
-<span class="dim">━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━</span>
+<span class="hr-separator"></span>
 
 <span class="section-header">[2022 - Present] Senior Backend Engineer</span>
 <span class="dim">THB (Technology Healthcare Big Data Analytics), New Delhi</span>
@@ -584,7 +648,7 @@ Key Work:
 
 Tech: NestJS, TypeScript, PostgreSQL, AWS Lambda, REST APIs
 
-<span class="dim">━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━</span>
+<span class="hr-separator"></span>
 
 <span class="section-header">[2021 - 2022] Software Engineer</span>
 <span class="dim">Kindlife, Gurgaon</span>
@@ -603,7 +667,7 @@ Key Work:
 
 Tech: PHP, MySQL, AWS SQS, Payment Gateways
 
-<span class="dim">━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━</span>
+<span class="hr-separator"></span>
 
 <span class="section-header">[2019 - 2021] Backend Developer</span>
 <span class="dim">Twango Social Network, New Delhi</span>
@@ -617,7 +681,7 @@ Key Work:
 
 Tech: Node.js, PHP, MySQL, Internal Tools
 
-<span class="dim">━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━</span>
+<span class="hr-separator"></span>
 
 <span class="dim">5+ years building systems that scale.</span>`;
                 }
@@ -662,7 +726,7 @@ Tech: Node.js, PHP, MySQL, Internal Tools
   ]
 }
 
-<span class="dim">━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━</span>
+<span class="hr-separator"></span>
 
 <span class="section-header">AI-DRIVEN DEVELOPMENT:</span>
 
@@ -689,7 +753,7 @@ GitHub:   <a href="https://github.com/nareshpatel1015" class="link" target="_bla
 Location: Bengaluru, Karnataka, India
 Timezone: IST (UTC+5:30)
 
-<span class="dim">━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━</span>
+<span class="hr-separator"></span>
 
 <span class="section-header">OPEN TO:</span>
 
@@ -710,7 +774,7 @@ Timezone: IST (UTC+5:30)
 
 <span class="warning">WHY WORK WITH ME</span>
 
-<span class="dim">━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━</span>
+<span class="hr-separator"></span>
 
 <span class="section-header">I SHIP PRODUCTION CODE</span>
 
@@ -749,7 +813,7 @@ Give me a problem. I'll:
 
 Self-directed. Low-drama. High-output.
 
-<span class="dim">━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━</span>
+<span class="hr-separator"></span>
 
 <span class="section-header">BOTTOM LINE:</span>
 
@@ -780,21 +844,26 @@ Let's talk: <a href="mailto:nareshpatel635@gmail.com" class="link">nareshpatel63
         
         // Initialize with welcome message
         function init() {
+            const tip = isMobile
+                ? `<span class="dim">Mobile: Tap the bar below to type commands</span>`
+                : `<span class="dim">Tip: Use ↑/↓ arrows for command history</span>`;
             const welcomeMsg = `
 <span class="login-info">Last login: Sat Apr 11 2026</span>
 
 <div class="portfolio-header">Naresh Patel - Founder & AI Engineer</div>
-<span class="separator">━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━</span>
+<span class="hr-separator"></span>
 
 <div class="welcome-text">Type '<span class="warning">help</span>' to see available commands.
 Type '<span class="warning">production</span>' to see my live AI work.
 Type '<span class="warning">projects</span>' to explore what I've built.
 Type '<span class="warning">skills</span>' to check my tech stack.</div>
 
-<span class="dim">Tip: Use ↑/↓ arrows for command history</span>
+${tip}
 `;
             addOutput(welcomeMsg);
-            input.focus();
+            if (!isMobile) {
+                input.focus();
+            }
         }
         
         // Add output to terminal
@@ -879,13 +948,27 @@ Type '<span class="warning">skills</span>' to check my tech stack.</div>
             cursorIndicator.style.display = input.value.length > 0 ? 'none' : 'inline';
         });
         
-        // Keep focus on input
-        document.addEventListener('click', () => {
+        // Keep focus on input — tap the input bar area only on mobile
+        const isMobile = /Mobi|Android|iPhone|iPad/i.test(navigator.userAgent);
+        document.querySelector('.input-line').addEventListener('click', () => {
             input.focus();
         });
-        
+        if (!isMobile) {
+            // On desktop also focus on any click in the terminal area
+            terminal.addEventListener('click', () => {
+                input.focus();
+            });
+        }
+
         // Initialize on load
         init();
+
+        // iOS Safari: scroll to bottom when virtual keyboard resizes viewport
+        if (window.visualViewport) {
+            window.visualViewport.addEventListener('resize', () => {
+                terminal.scrollTop = terminal.scrollHeight;
+            });
+        }
     </script>
 </body>
 </html>
