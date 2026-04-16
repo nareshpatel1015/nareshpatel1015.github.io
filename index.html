@@ -3,9 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>naresh@portfolio:~$</title>
-    <meta name="description" content="Naresh Patel - Founder & AI Engineer. Built Rawstore, HubbyAi, Wingardium, Blaze.">
-    
+    <title>naresh@profile:~$</title>
+    <meta name="description" content="naresh patel - Founder & AI Engineer. Built Rawstore, HubbyAi, Wingardium, Blaze.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;700&display=swap" rel="stylesheet">
+
     <style>
         * {
             margin: 0;
@@ -15,20 +18,21 @@
         
         :root {
             --bg: #0a0a0a;
-            --text: #00ff88;
-            --text-dim: #00aa55;
-            --text-gray: #888888;
-            --cursor: #00ff88;
-            --link: #00ddff;
+            --text: #d4d4d4;
+            --text-dim: #6b7280;
+            --text-gray: #9ca3af;
+            --cursor: #4ade80;
+            --link: #7ca9d8;
             --error: #ff4444;
-            --warning: #ffaa00;
+            --warning: #c4956b;
+            --divider: #374151;
         }
         
         body {
             background: var(--bg);
             color: var(--text);
-            font-family: 'Courier New', 'Monaco', 'Consolas', monospace;
-            font-size: 16px;
+            font-family: 'JetBrains Mono', 'Courier New', 'Monaco', 'Consolas', monospace;
+            font-size: 15px;
             line-height: 1.6;
             overflow: hidden;
         }
@@ -58,7 +62,7 @@
 
         .hr-separator {
             display: block;
-            border-top: 1px solid var(--text-dim);
+            border-top: 1px solid var(--divider);
             margin: 0.75rem 0;
             width: 100%;
         }
@@ -76,7 +80,7 @@
         }
         
         .prompt-text::before {
-            content: 'naresh@portfolio:~$ ';
+            content: 'naresh@dev:~$ ';
         }
         
         .command-text {
@@ -111,7 +115,7 @@
             flex-shrink: 0;
             background: var(--bg);
             padding: 1rem 2rem;
-            border-top: 1px solid rgba(0, 255, 136, 0.1);
+            border-top: 1px solid rgba(212, 212, 212, 0.08);
         }
         
         .input-prompt {
@@ -121,7 +125,7 @@
         }
         
         .input-prompt::before {
-            content: 'naresh@portfolio:~$ ';
+            content: 'naresh@dev:~$ ';
         }
         
         #command-input {
@@ -138,9 +142,9 @@
         .link {
             color: var(--link);
             text-decoration: none;
-            border-bottom: 1px dotted var(--link);
+            transition: opacity 0.2s ease;
         }
-        
+
         .link:hover {
             opacity: 0.7;
         }
@@ -151,6 +155,11 @@
         
         .warning {
             color: var(--warning);
+        }
+
+        .cmd-link {
+            cursor: pointer;
+            user-select: none;
         }
         
         .dim {
@@ -170,9 +179,99 @@
         .indent {
             margin-left: 2rem;
         }
+
+        .cli-welcome-box {
+            display: flex;
+            align-items: stretch;
+            border: 1px solid var(--divider);
+            margin-bottom: 0.8rem;
+            max-width: 680px;
+        }
+
+        .cli-welcome-name {
+            padding: 0.55rem 1.4rem;
+            color: #ffffff;
+            font-weight: 300;
+            font-size: 1.1em;
+            letter-spacing: 0.04em;
+            border-right: 1px solid var(--divider);
+            display: flex;
+            align-items: center;
+            white-space: nowrap;
+        }
+
+        .cli-welcome-tip {
+            padding: 0.55rem 1.2rem;
+            display: flex;
+            align-items: center;
+            font-size: 0.88em;
+            color: var(--text-dim);
+        }
+
+        .about-container {
+            max-width: 860px;
+            margin: 0.75rem auto 0;
+            border: 1px solid var(--divider);
+            overflow: hidden;
+        }
+
+        .about-layout {
+            display: flex;
+            gap: 0;
+            align-items: stretch;
+        }
+
+        .binary-profile-col {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            flex-shrink: 0;
+            border-right: 1px solid var(--divider);
+        }
+
+        .binary-profile {
+            font-size: 0.42em;
+            line-height: 1.15;
+            color: var(--text);
+            opacity: 0.85;
+            letter-spacing: 0.02em;
+            user-select: none;
+            white-space: pre;
+            padding: 0.8rem 0.8rem 0.4rem 0.8rem;
+        }
+
+        .binary-profile-name {
+            font-size: 0.85em;
+            color: var(--text-dim);
+            opacity: 0.9;
+            letter-spacing: 0.06em;
+            text-align: center;
+            padding: 0 0.8rem 0.7rem 0.8rem;
+            user-select: none;
+        }
+
+        .about-text {
+            flex: 1;
+            min-width: 0;
+            background: #000000;
+            padding: 1.2rem 1.4rem;
+            font-size: 0.93em;
+            line-height: 1.52;
+            color: #d4d4d4;
+        }
+
+        @media (max-width: 700px) {
+            .binary-profile-col {
+                display: none;
+            }
+            .about-text {
+                padding: 1rem 1.1rem;
+                font-size: 0.9em;
+            }
+        }
         
         .box {
-            border: 1px solid var(--text-dim);
+            border: 1px solid var(--divider);
             padding: 1rem;
             margin: 1rem 0;
         }
@@ -288,62 +387,136 @@
         
         let commandHistory = [];
         let historyIndex = -1;
-        
+
+        // Generate binary profile art (seeded, deterministic)
+        function generateBinaryProfile() {
+            const rows = 20, cols = 36;
+            let seed = 0xDEADBEEF;
+            const rand = () => {
+                seed ^= seed << 13; seed ^= seed >>> 17; seed ^= seed << 5;
+                return (seed >>> 0) / 4294967296;
+            };
+            const lines = [];
+            // Blank rows at top so the figure sits lower (profile feel)
+            for (let i = 0; i < 4; i++) lines.push(' '.repeat(cols));
+            for (let r = 0; r < rows; r++) {
+                let line = '';
+                const ny = r / rows;
+                for (let c = 0; c < cols; c++) {
+                    const nx = (c / cols - 0.5) * 2;
+                    // Head ellipse
+                    const hx = nx / 0.52, hy = (ny - 0.26) / 0.36;
+                    const headDist = Math.sqrt(hx * hx + hy * hy);
+                    // Hair (top of head, slightly denser)
+                    const inHair = hy < -0.6 && headDist < 1.05;
+                    // Neck
+                    const inNeck = ny > 0.55 && ny < 0.64 && Math.abs(nx) < 0.16;
+                    // Shoulders/body (trapezoid)
+                    const sw = 0.45 + Math.max(0, ny - 0.64) * 1.4;
+                    const inBody = ny >= 0.62 && ny < 1.0 && Math.abs(nx) < sw;
+                    // Collar/shirt detail
+                    const inCollar = ny > 0.63 && ny < 0.72 && Math.abs(nx) < 0.22;
+
+                    let d;
+                    if (inHair) d = 0.85;
+                    else if (headDist < 0.72) d = 0.80;       // face interior (bright)
+                    else if (headDist < 0.92) d = 0.60;       // face edge / jawline
+                    else if (headDist < 1.05) d = 0.40;       // head outline fade
+                    else if (inNeck) d = 0.65;
+                    else if (inCollar) d = 0.72;
+                    else if (inBody) d = 0.68;
+                    else d = 0.14;                             // background (dark)
+
+                    line += rand() < d ? '1' : '0';
+                }
+                lines.push(line);
+            }
+            return lines.join('\n');
+        }
+        const BINARY_PROFILE = generateBinaryProfile();
+
+        // Single-letter + common Linux + common typo aliases
+        const aliases = {
+            // Single-letter shortcuts
+            'a': 'about', 'p': 'projects', 'pr': 'production',
+            's': 'skills', 'e': 'experience', 'c': 'contact',
+            'h': 'hire', 'r': 'resume', 'b': 'blaze',
+            'w': 'wingardium', 'hb': 'hubbyai', 'rs': 'rawstore',
+
+            // Common Linux commands users might try
+            'ls': 'projects', 'ls -la': 'projects', 'ls -l': 'projects',
+            'whoami': 'about', 'whois': 'about', 'id': 'about',
+            'man': 'help', 'man help': 'help', '--help': 'help', '-h': 'help',
+            'cat': 'about', 'less': 'about', 'more': 'about',
+            'pwd': 'about', 'cd': 'about',
+            'ps': 'skills', 'env': 'skills', 'uname': 'skills',
+            'history': 'help', 'info': 'help',
+            'ssh': 'contact', 'mail': 'contact', 'email': 'contact',
+            'git log': 'experience', 'log': 'experience',
+            'cv': 'resume', 'bio': 'about',
+
+            // Common typos
+            'halp': 'help', 'hlep': 'help', 'hep': 'help',
+            'abuot': 'about', 'abut': 'about',
+            'porjects': 'projects', 'projetcs': 'projects',
+            'experiance': 'experience', 'experince': 'experience',
+            'cotact': 'contact', 'contcat': 'contact',
+            'skils': 'skills', 'skiils': 'skills',
+            'hrie': 'hire', 'hiree': 'hire',
+            'rezume': 'resume', 'resum': 'resume',
+        };
+
         // Command database
         const commands = {
             help: {
                 description: 'Show available commands',
                 execute: () => {
                     return `
-<span class="section-header">NARESH PATEL - Interactive Portfolio</span>
+<span class="section-header">NARESH PATEL — Interactive Portfolio</span>
 
-Welcome! I'm a founder & AI engineer who ships production code.
-Type commands below to explore my work.
+<span class="dim">Available Commands:</span>
 
-<span class="dim">QUICK START:</span>
-  <span class="warning">projects</span>      → My 4 founded companies  
-  <span class="warning">production</span>    → Live AI work on Calae.in & Zepto
-  <span class="warning">skills</span>        → Complete tech stack
-  
-<span class="dim">PROJECTS:</span>
-  <span class="warning">blaze</span>         → Open source dev automation (GitHub)
-  <span class="warning">wingardium</span>    → B2B AI image generation (LIVE)
-  <span class="warning">hubbyai</span>       → RAG-based relationship assistant
-  <span class="warning">rawstore</span>      → First startup (2018-2019)
-  
-<span class="dim">PROFESSIONAL:</span>
-  <span class="warning">experience</span>    → Career timeline (THB, Kindlife, Twango)
-  
-<span class="dim">CONTACT:</span>
-  <span class="warning">contact</span>       → Email, LinkedIn, GitHub
-  <span class="warning">hire</span>          → Why work with me
-  
-<span class="dim">UTILITIES:</span>
-  <span class="warning">clear</span>         → Clear terminal screen
-  <span class="warning">exit</span>          → Return to welcome screen
-  <span class="warning">about</span>         → Quick intro
-  
-Type any command above (e.g., "projects" or "blaze")`;
+  <span class="warning cmd-link" onclick="typeCommand('about')">[about]</span>       or <span class="warning cmd-link" onclick="typeCommand('a')">[a]</span>   <span style="color:#d4d4d4;">→ Quick intro &amp; who I am</span>
+  <span class="warning cmd-link" onclick="typeCommand('projects')">[projects]</span>    or <span class="warning cmd-link" onclick="typeCommand('p')">[p]</span>   <span style="color:#d4d4d4;">→ My 4 founded companies</span>
+  <span class="warning cmd-link" onclick="typeCommand('production')">[production]</span>  or <span class="warning cmd-link" onclick="typeCommand('pr')">[pr]</span>  <span style="color:#d4d4d4;">→ Live AI work on Calae.in &amp; Zepto</span>
+  <span class="warning cmd-link" onclick="typeCommand('skills')">[skills]</span>      or <span class="warning cmd-link" onclick="typeCommand('s')">[s]</span>   <span style="color:#d4d4d4;">→ Complete tech stack</span>
+  <span class="warning cmd-link" onclick="typeCommand('experience')">[experience]</span>  or <span class="warning cmd-link" onclick="typeCommand('e')">[e]</span>   <span style="color:#d4d4d4;">→ Career timeline</span>
+  <span class="warning cmd-link" onclick="typeCommand('resume')">[resume]</span>      or <span class="warning cmd-link" onclick="typeCommand('r')">[r]</span>   <span style="color:#d4d4d4;">→ Resume / CV</span>
+  <span class="warning cmd-link" onclick="typeCommand('contact')">[contact]</span>     or <span class="warning cmd-link" onclick="typeCommand('c')">[c]</span>   <span style="color:#d4d4d4;">→ Email, LinkedIn, GitHub</span>
+  <span class="warning cmd-link" onclick="typeCommand('hire')">[hire]</span>        or <span class="warning cmd-link" onclick="typeCommand('h')">[h]</span>   <span style="color:#d4d4d4;">→ Why work with me</span>
+
+<span class="dim">Projects:</span>
+
+  <span class="warning cmd-link" onclick="typeCommand('blaze')">[blaze]</span>       or <span class="warning cmd-link" onclick="typeCommand('b')">[b]</span>   <span style="color:#d4d4d4;">→ Open source dev automation (GitHub)</span>
+  <span class="warning cmd-link" onclick="typeCommand('wingardium')">[wingardium]</span>  or <span class="warning cmd-link" onclick="typeCommand('w')">[w]</span>   <span style="color:#d4d4d4;">→ B2B AI image generation (LIVE)</span>
+  <span class="warning cmd-link" onclick="typeCommand('hubbyai')">[hubbyai]</span>     or <span class="warning cmd-link" onclick="typeCommand('hb')">[hb]</span>  <span style="color:#d4d4d4;">→ RAG-based relationship assistant</span>
+  <span class="warning cmd-link" onclick="typeCommand('rawstore')">[rawstore]</span>    or <span class="warning cmd-link" onclick="typeCommand('rs')">[rs]</span>  <span style="color:#d4d4d4;">→ First startup (2018-2019)</span>
+
+<span class="dim">Utilities:</span>
+
+  <span class="warning cmd-link" onclick="typeCommand('clear')">[clear]</span>                 <span style="color:#d4d4d4;">→ Return to welcome screen</span>
+  <span class="warning cmd-link" onclick="typeCommand('exit')">[exit]</span>                  <span style="color:#d4d4d4;">→ Return to welcome screen</span>`;
                 }
             },
             
             about: {
                 description: 'Quick introduction',
                 execute: () => {
-                    return `
-<span class="section-header">$ whoami</span>
+                    return `<span class="section-header">$ about</span>
 
-Naresh Patel
-Founder & AI Engineer | Bengaluru, India
+<div class="about-container"><div class="about-layout"><div class="binary-profile-col"><pre class="binary-profile">${BINARY_PROFILE}</pre><div class="binary-profile-name">naresh patel</div></div><div class="about-text">Hey! I'm a Founder &amp; AI Engineer from Bengaluru, India.
 
-I build AI-powered products that ship to production.
+I've shipped AI-generated images to real e-commerce at scale — my work is live on <a href="https://www.calae.in" class="link" target="_blank">Calae.in</a> and <a href="https://www.zepto.com" class="link" target="_blank">Zepto</a> right now, driving actual sales. Run <a href="#" class="link" onclick="typeCommand('production');return false;">production</a> to see proof.
 
-• Founded <span class="warning">4 projects</span> (Rawstore → HubbyAi → Wingardium → Blaze)
-• Architected systems serving <span class="warning">20K+ daily users</span>
-• Shipped <span class="warning">AI-generated images live</span> on e-commerce sites
-• <span class="warning">5+ years</span> backend engineering at scale
+I've founded 4 companies: Rawstore (my first startup, 2018), HubbyAi (RAG-based relationship assistant), <a href="#" class="link" onclick="typeCommand('wingardium');return false;">Wingardium</a> (B2B AI image generation, LIVE), and <a href="#" class="link" onclick="typeCommand('blaze');return false;">Blaze</a> (open-source dev automation). Run <a href="#" class="link" onclick="typeCommand('projects');return false;">projects</a> to explore them all.
 
-<span class="dim">Try: "production" to see live work, "projects" to explore what I built</span>`;
+Previously I engineered at THB (20K+ daily appointments), Kindlife, and Twango — 5+ years building backend systems that don't fall over at 3am. Run <a href="#" class="link" onclick="typeCommand('experience');return false;">experience</a> for the full timeline.
+
+Fun fact: I use AI tools daily (Cursor, Claude, Copilot) to cut routine coding by ~70% — so I build faster without cutting corners. I build <span class="warning">with</span> AI and I build <span class="warning">AI</span>.
+
+At my core, I love building (and breaking) things. If you're making something ambitious, let's talk.
+
+Type <a href="https://www.linkedin.com/in/naresh-patel-2019/" class="link" target="_blank">linkedin</a>, <a href="https://github.com/nareshpatel1015" class="link" target="_blank">github</a>, or <a href="mailto:nareshpatel635@gmail.com" class="link">email</a> to connect with me.</div></div></div>`;
                 }
             },
             
@@ -824,10 +997,28 @@ Let's talk: <a href="mailto:nareshpatel635@gmail.com" class="link">nareshpatel63
                 }
             },
             
+            resume: {
+                description: 'Resume / CV',
+                execute: () => {
+                    return `
+<span class="section-header">$ cat ~/resume.txt</span>
+
+<span class="warning">NARESH PATEL — RESUME</span>
+<span class="dim">─────────────────────────────────────────────</span>
+
+<span class="dim">[Content coming soon]</span>
+
+<span class="dim">─────────────────────────────────────────────</span>
+Get in touch: <a href="mailto:nareshpatel635@gmail.com" class="link">nareshpatel635@gmail.com</a>
+LinkedIn:     <a href="https://www.linkedin.com/in/naresh-patel-2019/" class="link" target="_blank">linkedin.com/in/naresh-patel-2019</a>`;
+                }
+            },
+
             clear: {
-                description: 'Clear terminal screen',
+                description: 'Return to welcome screen',
                 execute: () => {
                     terminal.innerHTML = '';
+                    init();
                     return '';
                 }
             },
@@ -845,22 +1036,31 @@ Let's talk: <a href="mailto:nareshpatel635@gmail.com" class="link">nareshpatel63
         // Initialize with welcome message
         function init() {
             const tip = isMobile
-                ? `<span class="dim">Mobile: Tap the bar below to type commands</span>`
-                : `<span class="dim">Tip: Use ↑/↓ arrows for command history • Type 'exit' to restart</span>`;
+                ? `<span class="dim">Tap the bar below to type a command</span>`
+                : `<span class="dim">Tip: Use ↑/↓ arrows for history · Tab to autocomplete · Type 'exit' to restart</span>`;
             const welcomeMsg = `
-<span class="login-info">Last login: Sat Apr 11 2026</span>
-
-<div class="portfolio-header">Naresh Patel - Founder & AI Engineer</div>
+<div class="cli-welcome-box"><div class="cli-welcome-name">naresh patel</div><div class="cli-welcome-tip">${tip}</div></div>
+<span class="dim">Type '<span class="warning">a</span>' to know more about Naresh</span>
 <span class="hr-separator"></span>
 
-<div class="welcome-text">Type '<span class="warning">help</span>' to see available commands.
-Type '<span class="warning">production</span>' to see my live AI work.
-Type '<span class="warning">projects</span>' to explore what I've built.
-Type '<span class="warning">skills</span>' to check my tech stack.</div>
+<span class="dim">Available Commands:</span>
 
-${tip}
+  <span class="warning cmd-link" onclick="typeCommand('about')">[about]</span>       or <span class="warning cmd-link" onclick="typeCommand('a')">[a]</span>   <span style="color:#d4d4d4;">→ Quick intro &amp; who I am</span>
+  <span class="warning cmd-link" onclick="typeCommand('projects')">[projects]</span>    or <span class="warning cmd-link" onclick="typeCommand('p')">[p]</span>   <span style="color:#d4d4d4;">→ My 4 founded companies</span>
+  <span class="warning cmd-link" onclick="typeCommand('production')">[production]</span>  or <span class="warning cmd-link" onclick="typeCommand('pr')">[pr]</span>  <span style="color:#d4d4d4;">→ Live AI work (Calae.in &amp; Zepto)</span>
+  <span class="warning cmd-link" onclick="typeCommand('skills')">[skills]</span>      or <span class="warning cmd-link" onclick="typeCommand('s')">[s]</span>   <span style="color:#d4d4d4;">→ Tech stack</span>
+  <span class="warning cmd-link" onclick="typeCommand('experience')">[experience]</span>  or <span class="warning cmd-link" onclick="typeCommand('e')">[e]</span>   <span style="color:#d4d4d4;">→ Career timeline</span>
+  <span class="warning cmd-link" onclick="typeCommand('resume')">[resume]</span>      or <span class="warning cmd-link" onclick="typeCommand('r')">[r]</span>   <span style="color:#d4d4d4;">→ Resume / CV</span>
+  <span class="warning cmd-link" onclick="typeCommand('contact')">[contact]</span>     or <span class="warning cmd-link" onclick="typeCommand('c')">[c]</span>   <span style="color:#d4d4d4;">→ Get in touch</span>
+  <span class="warning cmd-link" onclick="typeCommand('hire')">[hire]</span>        or <span class="warning cmd-link" onclick="typeCommand('h')">[h]</span>   <span style="color:#d4d4d4;">→ Why work with me</span>
+  <span class="warning cmd-link" onclick="typeCommand('help')">[help]</span>                  <span style="color:#d4d4d4;">→ Full command list</span>
+
+<span class="dim">Contact Me:</span>
+
+  <a href="https://www.linkedin.com/in/naresh-patel-2019/" class="link" target="_blank">linkedin</a>  ·  <a href="https://github.com/nareshpatel1015" class="link" target="_blank">github</a>  ·  <a href="mailto:nareshpatel635@gmail.com" class="link">email</a>
 `;
             addOutput(welcomeMsg);
+            terminal.scrollTop = 0;
             if (!isMobile) {
                 input.focus();
             }
@@ -872,7 +1072,6 @@ ${tip}
             div.className = 'output-line';
             div.innerHTML = html;
             terminal.appendChild(div);
-            terminal.scrollTop = terminal.scrollHeight;
         }
         
         // Add command line to history display
@@ -883,29 +1082,70 @@ ${tip}
             terminal.appendChild(div);
         }
         
+        // Levenshtein distance for "did you mean" suggestions
+        function levenshtein(a, b) {
+            const m = a.length, n = b.length;
+            const dp = Array.from({length: m + 1}, (_, i) =>
+                Array.from({length: n + 1}, (_, j) => i === 0 ? j : j === 0 ? i : 0)
+            );
+            for (let i = 1; i <= m; i++)
+                for (let j = 1; j <= n; j++)
+                    dp[i][j] = a[i-1] === b[j-1] ? dp[i-1][j-1]
+                        : 1 + Math.min(dp[i-1][j], dp[i][j-1], dp[i-1][j-1]);
+            return dp[m][n];
+        }
+
+        function getSuggestions(input) {
+            const allCmds = Object.keys(commands);
+
+            // Prefix matches first (e.g. "ab" → "about")
+            const prefix = allCmds.filter(cmd => cmd.startsWith(input));
+
+            // Levenshtein fuzzy matches (e.g. "skils" → "skills")
+            const threshold = Math.max(2, Math.floor(input.length / 2));
+            const fuzzy = allCmds
+                .filter(cmd => !prefix.includes(cmd))
+                .map(cmd => ({cmd, dist: levenshtein(input, cmd)}))
+                .filter(({dist}) => dist <= threshold)
+                .sort((a, b) => a.dist - b.dist)
+                .map(({cmd}) => cmd);
+
+            return [...prefix, ...fuzzy].slice(0, 2);
+        }
+
         // Process command
         function processCommand(cmd) {
             const trimmed = cmd.trim().toLowerCase();
-            
+
             if (!trimmed) return;
-            
+
+            // Capture scroll position before adding new content
+            const scrollBefore = terminal.scrollHeight;
+
             // Add to history
             addCommandLine(cmd);
             commandHistory.unshift(trimmed);
             historyIndex = -1;
-            
+
+            // Resolve alias → full command name
+            const resolved = aliases[trimmed] || trimmed;
+
             // Execute command
-            if (commands[trimmed]) {
-                const output = commands[trimmed].execute();
+            if (commands[resolved]) {
+                const output = commands[resolved].execute();
                 if (output) {
                     addOutput(output);
                 }
             } else {
-                addOutput(`<span class="error">Command not found: ${cmd}</span>\n\nType '<span class="warning">help</span>' to see available commands.`);
+                const suggestions = getSuggestions(resolved);
+                const hint = suggestions.length > 0
+                    ? `\n<span class="dim">Did you mean <span class="warning">${suggestions.join('</span>, <span class="warning">')}</span>?</span>`
+                    : '';
+                addOutput(`<span class="error">Command not found: ${cmd}</span>${hint}\n\nType '<span class="warning">help</span>' to see all commands.`);
             }
             
-            // Scroll to bottom
-            terminal.scrollTop = terminal.scrollHeight;
+            // Scroll to start of new content (not bottom)
+            terminal.scrollTop = scrollBefore;
         }
         
         // Handle input
@@ -948,6 +1188,26 @@ ${tip}
             cursorIndicator.style.display = input.value.length > 0 ? 'none' : 'inline';
         });
         
+        // Simulate typing a command into the input bar, then execute it
+        function typeCommand(cmd) {
+            input.focus();
+            input.value = '';
+            cursorIndicator.style.display = 'none';
+            let i = 0;
+            const interval = setInterval(() => {
+                input.value += cmd[i];
+                i++;
+                if (i === cmd.length) {
+                    clearInterval(interval);
+                    setTimeout(() => {
+                        processCommand(cmd);
+                        input.value = '';
+                        cursorIndicator.style.display = 'inline';
+                    }, 180);
+                }
+            }, 60);
+        }
+
         // Keep focus on input — tap the input bar area only on mobile
         const isMobile = /Mobi|Android|iPhone|iPad/i.test(navigator.userAgent);
         document.querySelector('.input-line').addEventListener('click', () => {
