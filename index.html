@@ -184,7 +184,7 @@
             display: flex;
             align-items: stretch;
             border: 1px solid var(--divider);
-            margin-bottom: 0.8rem;
+            margin-bottom: 0.4rem;
             max-width: 680px;
         }
 
@@ -930,10 +930,7 @@ Timezone: IST (UTC+5:30)
 
 <span class="section-header">OPEN TO:</span>
 
-  • Co-founder opportunities (AI/SaaS startups)
   • Senior engineering roles (backend/AI focus)
-  • Technical advisory for early-stage startups
-  • Contract work on AI/automation projects
 
 <span class="dim">Type "hire" to see why you should work with me</span>`;
                 }
@@ -1000,17 +997,15 @@ Let's talk: <a href="mailto:nareshpatel635@gmail.com" class="link">nareshpatel63
             resume: {
                 description: 'Resume / CV',
                 execute: () => {
+                    const url = 'https://wingdemo.s3.ap-south-1.amazonaws.com/assets/Naresh_Patel_Resume.pdf';
+                    window.open(url, '_blank');
                     return `
-<span class="section-header">$ cat ~/resume.txt</span>
+<span class="section-header">$ open resume.pdf</span>
 
-<span class="warning">NARESH PATEL — RESUME</span>
-<span class="dim">─────────────────────────────────────────────</span>
+<span class="success">Opening resume in a new tab...</span>
 
-<span class="dim">[Content coming soon]</span>
-
-<span class="dim">─────────────────────────────────────────────</span>
-Get in touch: <a href="mailto:nareshpatel635@gmail.com" class="link">nareshpatel635@gmail.com</a>
-LinkedIn:     <a href="https://www.linkedin.com/in/naresh-patel-2019/" class="link" target="_blank">linkedin.com/in/naresh-patel-2019</a>`;
+<span class="dim">If it didn't open automatically:</span>
+<a href="${url}" target="_blank" class="link">→ Naresh_Patel_Resume.pdf</a>`;
                 }
             },
 
@@ -1040,8 +1035,6 @@ LinkedIn:     <a href="https://www.linkedin.com/in/naresh-patel-2019/" class="li
                 : `<span class="dim">Tip: Use ↑/↓ arrows for history · Tab to autocomplete · Type 'exit' to restart</span>`;
             const welcomeMsg = `
 <div class="cli-welcome-box"><div class="cli-welcome-name">naresh patel</div><div class="cli-welcome-tip">${tip}</div></div>
-<span class="hr-separator"></span>
-
 <span class="dim">Available Commands:</span>
 
   <span class="warning cmd-link" onclick="typeCommand('about')">[about]</span>       or <span class="warning cmd-link" onclick="typeCommand('a')">[a]</span>   <span style="color:#d4d4d4;">→ Quick intro &amp; who I am</span>
